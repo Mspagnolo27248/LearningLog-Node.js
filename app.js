@@ -27,6 +27,22 @@ app.use(express.static("public"));
 app.get("/",function (req,res){
 res.render('index')
 });
+
+app.get("/area/:area_id",function (req,res){
+    const area = req.params.area_id;
+    res.render("area",{area:area});
+    });
+
+app.get("/focus/:focus_id",function (req,res){
+    const focus_ = req.params.focus_id
+    res.render('focus',{focus_:focus_})
+    });
+
+app.get("/skills/:skill_id",function (req,res){
+    const skill = req.params.skill_id
+    res.render('skills',{skill:skill})
+    });
+
 //Run app
 
 app.listen(3000,function(){
