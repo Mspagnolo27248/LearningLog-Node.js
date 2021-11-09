@@ -1,11 +1,23 @@
 <%- include("partials/header"); -%>
-<body>
-    <h1>Knowledge Area</h1>
-    <!-- /For each area in Areas .../ -->
-    <div>
-        <a href="/area/finance">Finance</a>
-     </div>   
-   
 
+    <body>
+        <h1>Knowledge Areas</h1>
+        <!-- /For each area in Areas .../ -->
+        <% areas_data.forEach(function(area){%>
 
-</body>
+            <div>
+                <a href="/area/<%=area.name%>">
+                    <h2>
+                        <%= area.name %>
+                    </h2>
+                </a>
+            </div>
+
+            <%});%>
+
+                <form class="item" action="/" method="post">
+                    <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
+                    <button type="submit" class="button" name="button">+</button>
+                </form>
+
+    </body>

@@ -1,3 +1,8 @@
 body{
-    background-color: whitesmoke;
+    background-color: #202124;
+    color: whitesmoke;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+a{
+    color: rgb(126, 115, 115);
 }

@@ -1,7 +1,17 @@
 <%- include("partials/header"); -%>
 
-<h1>Focus:</h1>
 <h1><%=focus_ %></h1>
 <!-- /List of Skills/ -->
-<h2>List of Skills </h2>
-<a href="/skills/IRR">IRR</a>
+<h2>Skills: </h2>
+<% skills_data.forEach(function(skill){%>
+        
+    <div>
+        <a href="/skill/<%=skill.name%>"><h2><%= skill.name %></h2></a>
+     </div>   
+   
+     <%});%>
+
+     <form class="item" action="/focus/<%=focus_ %>" method="post">
+        <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
+        <button type="submit" class="button" name="button">+</button>
+    </form>
