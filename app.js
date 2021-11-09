@@ -9,21 +9,25 @@ const { stringify } = require('querystring');
 //Schemas
 const noteSchema = {
     name: String,
-    details: String
+    details: String,
+    skill:String,
+    focus:String,
+    area:String
 };
 const skillSchema = {
     name: String,
-    notes: [noteSchema]
+    focus:String,
+    area:String
 };
 
 const focusSchema = {
     name: String,
-    skills: [skillSchema]
+    area:String
 };
 
 const areaSchema = {
     name: String,
-    areas: [focusSchema]
+   
 };
 
 // Models
@@ -67,7 +71,6 @@ app.get("/", function (req, res) {
 app.post("/", function (req, res) {
     const newArea = new Area({
         name: req.body.newItem,
-        areas: []
     });
     newArea.save();
     res.redirect("/")
@@ -76,22 +79,20 @@ app.post("/", function (req, res) {
 
 app.get("/area/:area_id", function (req, res) {
     const area = req.params.area_id;
-    Area.findOne({ name: area }, function (err, data) {
+    Focus.find({ area: area}, function (err, data) {
         if (!err) {
-            if (!data) {
-                newArea = new Area({ name: area, areas: [] });
-                newArea.save();
-                res.redirect("/area/" + area);
+            if(!data){
+            res.render("area", { area: area, focus_data: undefined });  
             }
-            else {
-                res.render("area", { area: area, focus_data: data.areas });
+            else{
+            res.render("area", { area: area, focus_data: data });
             }
-
         }
         else {
             console.log(err);
         }
-    })
+
+        })
 
 });
 
@@ -99,19 +100,11 @@ app.post("/area/:area_id", function (req, res) {
     const area = req.params.area_id;
     const newFocus = new Focus({
         name: req.body.newItem,
-        skills: []
-    }
-    );
-    Area.findOne({ name: area }, function (err, data) {
-        if (!err) {
-            data.areas.push(newFocus);
-            data.save();
-            res.redirect("/area/" + area);
-        }
-        else {
-            console.log(err);
-        }
+        area:area
     })
+    newFocus.save()
+    res.redirect("/area/"+area);
+ 
 });
 
 
@@ -119,9 +112,16 @@ app.get("/area/:area_id/focus/:focus_id", function (req, res) {
     const focus_ = req.params.focus_id;
     const area = req.params.area_id;
 
-    Area.findOne({"areas.name":focus_},function(err,data){
+    Skills.find({area:area,focus:focus_},function(err,data){
         if(!err){
-        res.render('focus', { focus_: focus_, skills_data: data.skills })
+        if(!data){
+            res.render('focus',{ area:area,focus: focus_, skills_data: undefined })
+            
+        }
+        else{
+            res.render('focus', { area:area,focus: focus_, skills_data: data })
+        }
+        
         }
         else{
             console.log(err)
@@ -131,48 +131,61 @@ app.get("/area/:area_id/focus/:focus_id", function (req, res) {
 });
 
 
-app.post("/focus/:focus_id", function (req, res) {
+app.post("/area/:area_id/focus/:focus_id" ,function (req, res) {
+    const area  = req.params.area_id
     const focus_ = req.params.focus_id
+    const skill = req.body.newItem
     const newItem = new Skills({
-        name: req.body.newItem,
-        notes: []
+        name: skill,
+        area:area,
+        focus:focus_
     });
-    Focus.findOne({ name: focus_ }, function (err, data) {
-        if (!err) {
-            data.skills.push(newItem);
-            data.save();
-            res.redirect('/focus/' + focus_)
-        }
-        else {
-            console.log(err);
-        }
+    newItem.save()
+    res.redirect("/area/"+area+"/focus/"+focus_)
     });
-});
 
 
-app.get("/skill/:skill_id", function (req, res) {
+
+
+app.get("/area/:area_id/focus/:focus_id/skill/:skill_id", function (req, res) {
+    const area  = req.params.area_id
+    const focus_ = req.params.focus_id
     const skill = req.params.skill_id
-   res.render('skills', { skill: skill, notes_data: notes_data })
+    Notes.find({area:area,focus:focus_,skill:skill},function (err,data) {
+        if(!err){
+            if(data){
+                res.render('skills', {area:area,focus:focus_ ,skill: skill, notes_data: data })
+            }
+            else{
+                res.render('skills', { area:area,focus:focus_ ,skill: skill, notes_data: undefined }) 
+            }
+        }   
+
+    });
 });
 
-app.post("/skill/:skill_id", function (req, res) {
+app.post("/area/:area_id/focus/:focus_id/skill/:skill_id", function (req, res) {
+    const area  = req.params.area_id
+    const focus_ = req.params.focus_id
     const skill = req.params.skill_id;
+
+    const note = req.body.newItem;
+    const desc = req.body.desc;
+ 
     const newNote = new Notes({
-        name: req.body.newItem,
-        details: ""
-    }
-    );
-    Area.findOne({ name: skill }, function (err, data) {
-        if (!err) {
-            data.areas.push(newNote);
-            data.save();
-            res.redirect("/skill/" + skill);
-        }
-        else {
-            console.log(err);
-        }
-    })
+        name: note,
+        details: desc,
+        skill:skill,
+        focus:focus_,
+        area:area
+    });
+
+    newNote.save();
+    res.redirect(/area/+area+"/focus/"+focus_+"/skill/"+skill)
+
 });
+
+
 //Run app
 
 app.listen(3000, function () {

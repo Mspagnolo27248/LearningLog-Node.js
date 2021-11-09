@@ -7,8 +7,14 @@
     <div>
         
             <h3>[<%= note.name %>]</h3>
-            <p><%= note.notes %></p>
+            <p> <%= note.details %></p>
        
      </div>   
    
      <%});%>
+
+     <form class="item" action="/area/<%=area %>/focus/<%=focus %>/skill/<%=skill%>" method="post">
+        <input type="text" name="newItem" placeholder="New Item" autocomplete="off">
+        <input type="areatext" name="desc" autocomplete="off">
+        <button type="submit" class="button" name="button">+</button>
+    </form>
