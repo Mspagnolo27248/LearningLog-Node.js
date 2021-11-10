@@ -6,3 +6,20 @@ body{
 a{
     color: rgb(126, 115, 115);
 }
+
+button {
+background-color: green;
+color: whitesmoke;
+}
+
+input{
+    size: 25em;
+color: black;
+display: block;
+}
+
+textarea{
+    color: black;
+    display: block;
+    white-space: pre-wrap;
+}

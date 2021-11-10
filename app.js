@@ -170,7 +170,7 @@ app.post("/area/:area_id/focus/:focus_id/skill/:skill_id", function (req, res) {
     const skill = req.params.skill_id;
 
     const note = req.body.newItem;
-    const desc = req.body.desc;
+    const desc = req.body.desc.replace(/(?:\r\n|\r|\n)/g, '<br>');
  
     const newNote = new Notes({
         name: note,
@@ -185,7 +185,22 @@ app.post("/area/:area_id/focus/:focus_id/skill/:skill_id", function (req, res) {
 
 });
 
+app.post("/delete/:note",function (req,res) {
+    const note_id = req.params.note;
+    const area = req.body.area;
+    const focus_ = req.body.focus;
+    const skill = req.body.skill;
+   Notes.deleteOne({_id:note_id},function(err){
+       if(err){
+           console.log(err)
 
+       }
+       else{
+           console.log("Item Deleted")
+       }
+   }); 
+   res.redirect(/area/+area+"/focus/"+focus_+"/skill/"+skill)
+});
 //Run app
 
 app.listen(3000, function () {
