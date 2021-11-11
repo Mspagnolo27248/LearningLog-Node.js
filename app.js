@@ -207,7 +207,7 @@ app.post("/delete/:note",function (req,res) {
 });
 //Run app
 let port = process.env.PORT;
-if(port==null||pert==""){
+if(port==null||port==""){
     port = 3000;
 }
 
